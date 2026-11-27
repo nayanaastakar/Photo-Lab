@@ -64,8 +64,12 @@ st.markdown("""
         padding: 0 !important;
     }
 
-    [data-testid="stHeader"], [data-testid="stToolbar"] {
+    /* Hide Streamlit default headers & collapse buttons */
+    [data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stSidebarHeader"], [data-testid="stSidebarCollapseButton"] {
         display: none !important;
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
     /* Main Container fits viewport with balanced tight margins */
@@ -103,7 +107,7 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] > div:first-child {
-        padding: 0.8rem 0.55rem 0.45rem 0.55rem !important;
+        padding: 0.35rem 0.55rem 0.45rem 0.55rem !important;
         height: 100vh !important;
         overflow-y: hidden !important;
         display: flex !important;
@@ -113,7 +117,7 @@ st.markdown("""
     }
 
     [data-testid="stSidebarContent"] {
-        padding-top: 0.5rem !important;
+        padding-top: 0 !important;
     }
 
     /* Controls Top Header - Cleaned up to remove excess top gap */
@@ -689,8 +693,8 @@ with nav_col2:
             use_container_width=True,
         )
 
-# ── FIRST ROW (Original, Processed, Transformation Summary) ───────────────────
-col_orig, col_proc, col_summary = st.columns([3.3, 3.3, 3.4])
+# ── FIRST ROW (Original & Processed Images) ───────────────────────────────────
+col_orig, col_proc = st.columns([1, 1])
 
 with col_orig:
     st.markdown(f"""
@@ -714,47 +718,6 @@ with col_proc:
         </div>
         <div class="img-display-box">
             <img src="data:image/jpeg;base64,{proc_b64}" alt="Processed Image" />
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col_summary:
-    applied_list = []
-    if brightness != 1.0:
-        applied_list.append(f"Brightness adjusted by factor {brightness:.2f}")
-    if contrast != 1.0:
-        applied_list.append(f"Contrast adjusted by factor {contrast:.2f}")
-    if sharpness != 1.0:
-        applied_list.append(f"Sharpness adjusted by factor {sharpness:.2f}")
-    if saturation != 1.0:
-        applied_list.append(f"Saturation adjusted by factor {saturation:.2f}")
-    if blur_radius > 0:
-        applied_list.append(f"Blur radius applied ({blur_radius:.1f}px)")
-    if vignette_strength > 0:
-        applied_list.append(f"Vignette applied ({vignette_strength:.0%})")
-    if filter_mode != "None":
-        applied_list.append(f"{filter_mode} filter applied")
-    if rotation != 0:
-        applied_list.append(f"Rotated by {rotation}°")
-    if flip_option != "None":
-        applied_list.append(f"Flipped {flip_option.lower()}")
-
-    if not applied_list:
-        applied_list = ["No transformations applied yet"]
-
-    summary_html = "".join([
-        f'<div class="summary-item"><span class="check-icon">✔</span> {item}</div>'
-        for item in applied_list
-    ])
-
-    st.markdown(f"""
-    <div class="studio-card">
-        <div class="card-header-bar">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-            Transformation Summary
-        </div>
-        <div class="summary-list">
-            {summary_html}
         </div>
     </div>
     """, unsafe_allow_html=True)
