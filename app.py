@@ -103,16 +103,20 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] > div:first-child {
-        padding: 0.45rem 0.55rem !important;
+        padding: 0.8rem 0.55rem 0.45rem 0.55rem !important;
         height: 100vh !important;
         overflow-y: hidden !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
         box-sizing: border-box !important;
     }
 
-    /* Controls Top Header */
+    [data-testid="stSidebarContent"] {
+        padding-top: 0.5rem !important;
+    }
+
+    /* Controls Top Header - Cleaned up to remove excess top gap */
     .sidebar-header {
         display: flex;
         align-items: center;
@@ -120,7 +124,9 @@ st.markdown("""
         font-size: 1.15rem;
         font-weight: 700;
         color: var(--text-white);
-        margin-bottom: 0.25rem;
+        margin-top: 0 !important;
+        margin-bottom: 0.35rem;
+        padding-top: 0 !important;
         padding-left: 0.15rem;
     }
     .sidebar-header svg {
@@ -244,6 +250,9 @@ st.markdown("""
     }
 
     /* ── TOP NAV BAR ── */
+    [data-testid="stLayoutWrapper"]:first-child {
+        overflow: hidden !important;
+    }
     .top-navbar-container {
         display: flex;
         align-items: center;
