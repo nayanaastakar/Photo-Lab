@@ -4,22 +4,9 @@ PhotoLab is a modern, high-performance image processing and analysis studio buil
 
 ---
 
-## 📸 Screenshots & Showcase
+## 📸 Preview
 
-### 1. Desktop Dashboard (1920 × 1080 Viewport)
-Full zero-scroll workstation view with compact sidebar controls, dual preview panels, metric badges, RGB histograms, and image metadata.
-
-![PhotoLab Desktop Studio](docs/screenshots/photolab_desktop_full.png)
-
-### 2. Collapsible Sidebar & Hamburger Navigation
-Toggle the controls sidebar with the custom glowing cyan hamburger button to inspect images on a full-width canvas.
-
-![PhotoLab Collapsible Sidebar](docs/screenshots/photolab_collapsed_sidebar.png)
-
-### 3. Responsive & Touch-Friendly (Mobile & Tablet)
-Fluid adaptive layout designed to stack previews, analytics, and controls smoothly across smaller screens.
-
-![PhotoLab Mobile View](docs/screenshots/photolab_mobile.png)
+![PhotoLab Studio](docs/screenshots/photolab_preview.jpg)
 
 ---
 
