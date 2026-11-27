@@ -31,7 +31,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Pixel-Perfect Styling Matching Reference Screenshot (Zero-Scroll 1920x1080) ──
+# ── Fully Responsive + Midnight Navy & Electric Cyan Styling ──────────────────
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
@@ -52,11 +52,8 @@ st.markdown("""
         --green-check: #00EFA5;
     }
 
-    /* Enforce Strict Single Desktop Viewport (Zero Scroll at 1920x1080 & Standard Screens) */
-    html, body, .stApp, [data-testid="stAppViewContainer"] {
-        height: 100vh !important;
-        max-height: 100vh !important;
-        overflow: hidden !important;
+    /* ── BASE & DESKTOP ZERO-SCROLL VIEWPORT ── */
+    html, body, .stApp {
         background-color: var(--bg-main) !important;
         font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif !important;
         color: var(--text-white) !important;
@@ -64,63 +61,149 @@ st.markdown("""
         padding: 0 !important;
     }
 
-    /* Hide Streamlit default headers & collapse buttons */
-    [data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stSidebarHeader"], [data-testid="stSidebarCollapseButton"] {
+    /* Hide Streamlit default header decoration */
+    [data-testid="stHeader"], [data-testid="stToolbar"] {
         display: none !important;
-        height: 0 !important;
-        padding: 0 !important;
-        margin: 0 !important;
     }
 
-    /* Main Container fits viewport with balanced tight margins */
-    .main .block-container, [data-testid="stMainBlockContainer"] {
-        padding: 0.6rem 0.9rem 0.6rem 0.9rem !important;
-        max-width: 100% !important;
-        height: 100vh !important;
-        max-height: 100vh !important;
-        overflow: hidden !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important;
-        gap: 0.55rem !important;
-        box-sizing: border-box !important;
+    /* ── RESPONSIVE DESKTOP (>= 1025px): STRICT ZERO SCROLL ── */
+    @media (min-width: 1025px) {
+        html, body, .stApp, [data-testid="stAppViewContainer"] {
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+        }
+
+        .main .block-container, [data-testid="stMainBlockContainer"] {
+            padding: 0.6rem 0.9rem 0.6rem 0.9rem !important;
+            max-width: 100% !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            gap: 0.55rem !important;
+            box-sizing: border-box !important;
+        }
+
+        [data-testid="stMainBlockContainer"] > div {
+            height: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            gap: 0.55rem !important;
+        }
+
+        [data-testid="stSidebar"] {
+            background: #031422 !important;
+            border-right: 1px solid rgba(0, 217, 232, 0.25) !important;
+            width: 19vw !important;
+            min-width: 260px !important;
+            max-width: 290px !important;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6) !important;
+            height: 100vh !important;
+            overflow: hidden !important;
+        }
+
+        [data-testid="stSidebar"] > div:first-child {
+            padding: 0.35rem 0.55rem 0.45rem 0.55rem !important;
+            height: 100vh !important;
+            overflow-y: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            box-sizing: border-box !important;
+        }
+
+        .img-display-box {
+            height: 225px !important;
+        }
+        .img-display-box img {
+            height: 225px !important;
+        }
     }
 
-    [data-testid="stMainBlockContainer"] > div {
-        height: auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important;
-        gap: 0.55rem !important;
+    /* ── RESPONSIVE LAPTOP / TABLET LANDSCAPE (769px to 1024px) ── */
+    @media (max-width: 1024px) and (min-width: 769px) {
+        html, body, .stApp, [data-testid="stAppViewContainer"] {
+            height: auto !important;
+            overflow-y: auto !important;
+        }
+        .main .block-container, [data-testid="stMainBlockContainer"] {
+            padding: 0.75rem 1rem !important;
+            height: auto !important;
+            overflow: visible !important;
+            gap: 0.65rem !important;
+        }
+        [data-testid="stSidebar"] {
+            width: 280px !important;
+            height: 100vh !important;
+            overflow-y: auto !important;
+        }
+        [data-testid="stSidebar"] > div:first-child {
+            height: auto !important;
+            overflow-y: auto !important;
+        }
+        .img-display-box {
+            height: 180px !important;
+        }
+        .img-display-box img {
+            height: 180px !important;
+        }
+        .brand-title h1 {
+            font-size: 1.25rem !important;
+        }
+        .brand-title .tagline {
+            display: none !important;
+        }
     }
 
-    /* ── LEFT SIDEBAR (Controls - Match Image 2 Pixel-for-Pixel & No-Scroll) ── */
-    [data-testid="stSidebar"] {
-        background: #031422 !important;
-        border-right: 1px solid rgba(0, 217, 232, 0.25) !important;
-        width: 19vw !important;
-        min-width: 260px !important;
-        max-width: 290px !important;
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6) !important;
-        height: 100vh !important;
-        overflow: hidden !important;
+    /* ── RESPONSIVE MOBILE / PORTRAIT TABLET (<= 768px) ── */
+    @media (max-width: 768px) {
+        html, body, .stApp, [data-testid="stAppViewContainer"] {
+            height: auto !important;
+            overflow-y: auto !important;
+        }
+        .main .block-container, [data-testid="stMainBlockContainer"] {
+            padding: 0.5rem !important;
+            height: auto !important;
+            overflow: visible !important;
+            gap: 0.75rem !important;
+        }
+        [data-testid="stSidebar"] {
+            width: 100% !important;
+            height: auto !important;
+        }
+        [data-testid="stSidebar"] > div:first-child {
+            height: auto !important;
+            overflow-y: visible !important;
+        }
+        .brand-title h1 {
+            font-size: 1.15rem !important;
+        }
+        .brand-title .tagline {
+            display: none !important;
+        }
+        .img-display-box {
+            height: 180px !important;
+        }
+        .img-display-box img {
+            height: 180px !important;
+        }
+        .stat-badge {
+            margin-bottom: 0.4rem !important;
+        }
+        .info-strip-item {
+            margin-bottom: 0.35rem !important;
+        }
     }
 
-    [data-testid="stSidebar"] > div:first-child {
-        padding: 0.35rem 0.55rem 0.45rem 0.55rem !important;
-        height: 100vh !important;
-        overflow-y: hidden !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important;
-        box-sizing: border-box !important;
-    }
-
+    /* ── SIDEBAR CONTROLS STYLING (Card boxes, clean sliders, no red text) ── */
     [data-testid="stSidebarContent"] {
         padding-top: 0 !important;
     }
 
-    /* Controls Top Header - Cleaned up to remove excess top gap */
     .sidebar-header {
         display: flex;
         align-items: center;
@@ -137,7 +220,6 @@ st.markdown("""
         color: var(--primary-cyan);
     }
 
-    /* Sidebar Group Card Containers (Matching Image 2 rounded glowing cards) */
     .sidebar-card-box {
         background: rgba(6, 38, 56, 0.85);
         border: 1px solid rgba(0, 217, 232, 0.35);
@@ -189,7 +271,6 @@ st.markdown("""
         gap: 0.3rem;
     }
 
-    /* Slider Row: Label on left, Value right-aligned */
     .slider-row-header {
         display: flex;
         justify-content: space-between;
@@ -205,7 +286,7 @@ st.markdown("""
         font-weight: 600;
     }
 
-    /* Completely hide Streamlit default min/max tick bar and floating red bubble */
+    /* Suppress default Streamlit tick numbers and floating red bubbles */
     [data-testid="stSliderTickBar"] {
         display: none !important;
     }
@@ -352,10 +433,8 @@ st.markdown("""
         color: var(--primary-cyan);
     }
 
-    /* Image Display Containers (Well Proportioned) */
     .img-display-box {
         width: 100%;
-        height: 220px;
         background: #01070e;
         border-radius: 7px;
         overflow: hidden;
@@ -366,33 +445,8 @@ st.markdown("""
     }
     .img-display-box img {
         width: 100%;
-        height: 220px;
         object-fit: cover;
         display: block;
-    }
-
-    /* Transformation Summary Checklist */
-    .summary-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-        overflow-y: auto;
-        height: 220px;
-        max-height: 220px;
-    }
-    .summary-item {
-        display: flex;
-        align-items: center;
-        gap: 0.45rem;
-        font-size: 0.75rem;
-        color: #c0d8ec;
-        font-weight: 500;
-    }
-    .summary-item .check-icon {
-        color: var(--green-check);
-        font-size: 0.88rem;
-        display: flex;
-        align-items: center;
     }
 
     /* Metric Badges (Second Row) */
@@ -462,7 +516,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ── Sidebar Controls (19% width, exact Image 2 layout, no-scroll) ───────────
+# ── Sidebar Controls (19% width, exact Image 2 layout, responsive) ───────────
 with st.sidebar:
     st.markdown("""
     <div class="sidebar-header">
