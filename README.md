@@ -1,14 +1,39 @@
-# PhotoLab
+# PhotoLab - Image Processing & Analysis Studio
 
-PhotoLab is a small, local image editor built with Streamlit. It lets you upload an image, apply common adjustments and filters, preview changes side-by-side, analyze pixel differences, and download the result.
+PhotoLab is a modern, high-performance image processing and analysis studio built with Streamlit, styled with an electric Midnight Navy & Cyan aesthetic. It features real-time adjustments, instantaneous side-by-side comparison, interactive color histograms, and deep pixel-level change analytics.
 
-## Features
-- Brightness, contrast, sharpness, and saturation adjustments
-- Blur and vignette effects
-- Grayscale, sepia and invert filters
-- Rotation and flip transforms
-- Side-by-side original vs processed preview
-- Change analysis: average change, max change, and percent pixels affected
+---
+
+## 📸 Screenshots & Showcase
+
+### 1. Desktop Dashboard (1920 × 1080 Viewport)
+Full zero-scroll workstation view with compact sidebar controls, dual preview panels, metric badges, RGB histograms, and image metadata.
+
+![PhotoLab Desktop Studio](docs/screenshots/photolab_desktop_full.png)
+
+### 2. Collapsible Sidebar & Hamburger Navigation
+Toggle the controls sidebar with the custom glowing cyan hamburger button to inspect images on a full-width canvas.
+
+![PhotoLab Collapsible Sidebar](docs/screenshots/photolab_collapsed_sidebar.png)
+
+### 3. Responsive & Touch-Friendly (Mobile & Tablet)
+Fluid adaptive layout designed to stack previews, analytics, and controls smoothly across smaller screens.
+
+![PhotoLab Mobile View](docs/screenshots/photolab_mobile.png)
+
+---
+
+## ✨ Features
+- **Basic Adjustments**: Real-time Brightness, Contrast, Sharpness, and Saturation controls.
+- **Effects & Filters**: Gaussian blur, vignette masking, sepia toning, grayscale, and color inversion.
+- **Transformations**: Arbitrary 360° rotation and horizontal/vertical flipping.
+- **Side-by-Side Comparison**: Side-by-side original vs processed view.
+- **Pixel Analytics**: Automatic calculation of Average Pixel Change (%), Maximum Pixel Change (%), and Total Pixels Affected (%).
+- **Dual RGB Histograms**: Interactive side-by-side Plotly histograms comparing tonal distributions.
+- **Multi-Format Export**: One-click download as JPEG (with quality control), PNG, or WebP.
+- **Responsive Architecture**: Pixel-perfect desktop layout ($\ge 1025\text{px}$ non-scrollable) alongside adaptive laptop, tablet, and mobile views.
+
+---
 
 ## Requirements
 - Python 3.8+
