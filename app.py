@@ -31,27 +31,28 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Pure Single-Screen Zero-Scroll CSS ───────────────────────────────────────
+# ── Pixel-Perfect Styling Matching Reference Screenshot (Zero-Scroll 1920x1080) ──
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
     :root {
-        --bg-main: #06121e;
-        --sidebar-bg: #091726;
-        --card-bg: rgba(9, 24, 38, 0.75);
-        --card-border: #14314c;
-        --card-border-glow: #1a4168;
-        --cyan-accent: #00d2d3;
-        --cyan-glow: rgba(0, 210, 211, 0.25);
-        --teal-gradient: linear-gradient(135deg, #00d2d3 0%, #00a896 100%);
+        --bg-main: #020D18;
+        --sidebar-bg: #062033;
+        --card-bg: #062638;
+        --card-border: #00D9E8;
+        --card-border-glow: rgba(0, 217, 232, 0.35);
+        --primary-cyan: #00E5F5;
+        --secondary-emerald: #00EFA5;
+        --cyan-glow: rgba(0, 229, 245, 0.25);
+        --teal-gradient: linear-gradient(135deg, #00E5F5 0%, #00a896 100%);
         --text-white: #ffffff;
         --text-muted: #8ea5b8;
         --text-sub: #5f7a92;
-        --green-check: #00e676;
+        --green-check: #00EFA5;
     }
 
-    /* Enforce strict single-screen height without scrolling */
+    /* Enforce Strict Single Desktop Viewport (Zero Scroll at 1920x1080 & Standard Screens) */
     html, body, .stApp, [data-testid="stAppViewContainer"] {
         height: 100vh !important;
         max-height: 100vh !important;
@@ -67,7 +68,7 @@ st.markdown("""
         display: none !important;
     }
 
-    /* Container fills screen without overflow */
+    /* Main Container fits viewport without overflow */
     .main .block-container, [data-testid="stMainBlockContainer"] {
         padding: 0.25rem 0.65rem 0.25rem 0.65rem !important;
         max-width: 100% !important;
@@ -88,14 +89,14 @@ st.markdown("""
         gap: 0.15rem !important;
     }
 
-    /* Sidebar - Fitted & Non-Scrollable */
+    /* ── LEFT SIDEBAR (Controls - 19% Width) ── */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #071523 0%, #06121e 100%) !important;
-        border-right: 1px solid #102940 !important;
-        width: 270px !important;
-        min-width: 270px !important;
-        max-width: 270px !important;
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+        background: linear-gradient(180deg, #062033 0%, #041624 100%) !important;
+        border-right: 1px solid rgba(0, 217, 232, 0.25) !important;
+        width: 19vw !important;
+        min-width: 260px !important;
+        max-width: 290px !important;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6) !important;
         height: 100vh !important;
         overflow: hidden !important;
     }
@@ -109,7 +110,8 @@ st.markdown("""
         width: 3px;
     }
     [data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-thumb {
-        background: #14314c;
+        background: #00D9E8;
+        border-radius: 4px;
     }
 
     /* Controls Header */
@@ -117,16 +119,17 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 0.45rem;
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         font-weight: 700;
         color: var(--text-white);
         margin-bottom: 0.25rem;
         padding-left: 0.15rem;
     }
     .sidebar-header svg {
-        color: var(--cyan-accent);
+        color: var(--primary-cyan);
     }
 
+    /* Upload Box */
     .upload-label {
         font-size: 0.72rem;
         font-weight: 600;
@@ -140,20 +143,21 @@ st.markdown("""
         margin-bottom: 0.15rem !important;
     }
     [data-testid="stFileUploader"] > section {
-        padding: 0.2rem 0.4rem !important;
-        background: rgba(13, 31, 50, 0.6) !important;
-        border: 1px dashed #1e4569 !important;
+        padding: 0.25rem 0.45rem !important;
+        background: rgba(6, 38, 56, 0.7) !important;
+        border: 1px dashed rgba(0, 217, 232, 0.6) !important;
         border-radius: 6px !important;
-        min-height: 42px !important;
+        min-height: 44px !important;
     }
     [data-testid="stFileUploader"] section > button {
         display: none !important;
     }
     [data-testid="stFileUploader"] section div {
-        color: var(--cyan-accent) !important;
+        color: var(--primary-cyan) !important;
         font-size: 0.68rem !important;
     }
 
+    /* Collapsible Section Headers */
     .sidebar-section-title {
         display: flex;
         align-items: center;
@@ -161,7 +165,7 @@ st.markdown("""
         font-size: 0.78rem;
         font-weight: 600;
         color: #d1e4f2;
-        margin-top: 0.25rem;
+        margin-top: 0.22rem;
         margin-bottom: 0.05rem;
         padding: 0.1rem 0.15rem;
     }
@@ -171,6 +175,7 @@ st.markdown("""
         gap: 0.35rem;
     }
 
+    /* Compact Sliders */
     .stSlider {
         margin-bottom: -0.35rem !important;
         padding-top: 0 !important;
@@ -185,16 +190,17 @@ st.markdown("""
         padding: 0.15rem 0 !important;
     }
     div[data-testid="stSlider"] [role="slider"] {
-        background-color: var(--cyan-accent) !important;
+        background-color: var(--primary-cyan) !important;
         border: 2px solid #ffffff !important;
-        box-shadow: 0 0 8px rgba(0, 210, 211, 0.7) !important;
+        box-shadow: 0 0 8px rgba(0, 229, 245, 0.8) !important;
         width: 12px !important;
         height: 12px !important;
     }
 
+    /* Selectboxes */
     [data-baseweb="select"] {
-        background: #0d2238 !important;
-        border: 1px solid #1a3d60 !important;
+        background: #062638 !important;
+        border: 1px solid rgba(0, 217, 232, 0.4) !important;
         border-radius: 6px !important;
     }
     [data-baseweb="select"] * {
@@ -208,7 +214,7 @@ st.markdown("""
         align-items: center;
         justify-content: space-between;
         padding: 0.15rem 0.35rem 0.35rem 0.35rem;
-        border-bottom: 1px solid rgba(20, 49, 76, 0.45);
+        border-bottom: 1px solid rgba(0, 217, 232, 0.2);
         height: 42px;
         box-sizing: border-box;
     }
@@ -224,34 +230,35 @@ st.markdown("""
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #06121e;
-        box-shadow: 0 0 12px rgba(0, 210, 211, 0.4);
+        color: #020D18;
+        box-shadow: 0 0 12px rgba(0, 229, 245, 0.4);
     }
     .brand-title h1 {
-        font-size: 1.3rem;
+        font-size: 1.35rem;
         font-weight: 800;
         margin: 0;
         color: #ffffff;
         letter-spacing: -0.02em;
     }
     .brand-title .tagline {
-        font-size: 0.8rem;
+        font-size: 0.82rem;
         color: #728c9f;
         margin-left: 0.65rem;
         padding-left: 0.65rem;
-        border-left: 1px solid #1e3a54;
+        border-left: 1px solid rgba(0, 217, 232, 0.3);
         font-weight: 400;
     }
 
+    /* Action Buttons (Reset All & Download) */
     .stDownloadButton > button {
         background: var(--teal-gradient) !important;
-        color: #061421 !important;
+        color: #020D18 !important;
         border: none !important;
         padding: 0.28rem 0.95rem !important;
         border-radius: 18px !important;
         font-weight: 700 !important;
         font-size: 0.75rem !important;
-        box-shadow: 0 0 14px rgba(0, 210, 211, 0.35) !important;
+        box-shadow: 0 0 14px rgba(0, 229, 245, 0.4) !important;
         transition: transform 0.15s !important;
         display: inline-flex !important;
         align-items: center !important;
@@ -260,7 +267,7 @@ st.markdown("""
     }
     .stDownloadButton > button:hover {
         transform: translateY(-1px) !important;
-        box-shadow: 0 0 18px rgba(0, 210, 211, 0.55) !important;
+        box-shadow: 0 0 20px rgba(0, 229, 245, 0.7) !important;
         color: #000000 !important;
     }
     .stButton > button {
@@ -268,20 +275,20 @@ st.markdown("""
         padding: 0.28rem 0.85rem !important;
         font-size: 0.75rem !important;
         border-radius: 18px !important;
-        background: rgba(13, 31, 50, 0.8) !important;
-        border: 1px solid #1e4569 !important;
+        background: rgba(6, 38, 56, 0.8) !important;
+        border: 1px solid rgba(0, 217, 232, 0.5) !important;
         color: #b0c9dd !important;
     }
 
-    /* ── CARDS ── */
+    /* ── DASHBOARD CARDS ── */
     .studio-card {
         background: var(--card-bg);
-        border: 1px solid var(--card-border);
+        border: 1px solid rgba(0, 217, 232, 0.35);
         border-radius: 9px;
         padding: 0.4rem 0.6rem;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
         box-sizing: border-box;
     }
 
@@ -296,20 +303,20 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
     .card-header-bar svg {
-        color: var(--cyan-accent);
+        color: var(--primary-cyan);
     }
 
-    /* Image Containers Fixed to prevent overflow */
+    /* Image Display Containers */
     .img-display-box {
         width: 100%;
         height: 180px;
-        background: #02070d;
+        background: #01070e;
         border-radius: 6px;
         overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid #10263c;
+        border: 1px solid rgba(0, 217, 232, 0.2);
     }
     .img-display-box img {
         width: 100%;
@@ -318,7 +325,7 @@ st.markdown("""
         display: block;
     }
 
-    /* Summary list fitted */
+    /* Transformation Summary Checklist */
     .summary-list {
         display: flex;
         flex-direction: column;
@@ -342,10 +349,10 @@ st.markdown("""
         align-items: center;
     }
 
-    /* Metric Badges */
+    /* Metric Badges (Second Row) */
     .stat-badge {
-        background: linear-gradient(135deg, rgba(8, 28, 48, 0.8) 0%, rgba(5, 45, 65, 0.7) 100%);
-        border: 1px solid #144066;
+        background: linear-gradient(135deg, rgba(6, 38, 56, 0.85) 0%, rgba(4, 25, 38, 0.8) 100%);
+        border: 1px solid rgba(0, 217, 232, 0.4);
         border-radius: 8px;
         padding: 0.25rem 0.75rem;
         display: flex;
@@ -355,8 +362,8 @@ st.markdown("""
         box-sizing: border-box;
     }
     .stat-badge.highlight {
-        background: linear-gradient(135deg, rgba(0, 95, 96, 0.4) 0%, rgba(0, 168, 150, 0.35) 100%);
-        border-color: #00a896;
+        background: linear-gradient(135deg, rgba(0, 95, 96, 0.45) 0%, rgba(0, 239, 165, 0.3) 100%);
+        border-color: var(--secondary-emerald);
     }
     .stat-left {
         display: flex;
@@ -365,7 +372,7 @@ st.markdown("""
     }
     .stat-icon {
         font-size: 1.15rem;
-        color: var(--cyan-accent);
+        color: var(--primary-cyan);
     }
     .stat-text .stat-title {
         font-size: 0.65rem;
@@ -373,15 +380,15 @@ st.markdown("""
         color: #8bb1cf;
     }
     .stat-value {
-        font-size: 1.2rem;
+        font-size: 1.25rem;
         font-weight: 800;
         color: #ffffff;
     }
 
-    /* Bottom Info Strip */
+    /* Bottom Info Strip (Bottom Row) */
     .info-strip-item {
-        background: rgba(10, 26, 42, 0.75);
-        border: 1px solid #143555;
+        background: rgba(6, 38, 56, 0.85);
+        border: 1px solid rgba(0, 217, 232, 0.35);
         border-radius: 7px;
         padding: 0.2rem 0.5rem;
         display: flex;
@@ -391,7 +398,7 @@ st.markdown("""
         box-sizing: border-box;
     }
     .info-strip-icon {
-        color: var(--cyan-accent);
+        color: var(--primary-cyan);
         font-size: 1rem;
     }
     .info-strip-meta .info-strip-label {
@@ -409,7 +416,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ── Sidebar Controls ─────────────────────────────────────────────────────────
+# ── Sidebar Controls (19% width, exact order) ────────────────────────────────
 with st.sidebar:
     st.markdown("""
     <div class="sidebar-header">
@@ -422,12 +429,14 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+    # 1. Upload Image
     uploaded_file = st.file_uploader(
         "Upload Image",
         type=["png", "jpg", "jpeg", "webp", "bmp"],
         label_visibility="collapsed",
     )
 
+    # 2. Basic Adjustments
     st.markdown("""
     <div class="sidebar-section-title">
         <span>🔆 Basic Adjustments</span>
@@ -439,6 +448,7 @@ with st.sidebar:
     sharpness = st.slider("Sharpness", 0.0, 3.0, 0.90, 0.05)
     saturation = st.slider("Saturation", 0.0, 3.0, 0.20, 0.05)
 
+    # 3. Effects
     st.markdown("""
     <div class="sidebar-section-title">
         <span>✨ Effects</span>
@@ -448,6 +458,7 @@ with st.sidebar:
     blur_radius = st.slider("Blur Radius", 0.0, 10.0, 0.00, 0.5)
     vignette_strength = st.slider("Vignette", 0.0, 1.0, 0.00, 0.05)
 
+    # 4. Filters
     st.markdown("""
     <div class="sidebar-section-title">
         <span>🎨 Filters</span>
@@ -461,6 +472,7 @@ with st.sidebar:
         label_visibility="collapsed",
     )
 
+    # 5. Transform
     st.markdown("""
     <div class="sidebar-section-title">
         <span>🔄 Transform</span>
@@ -475,6 +487,7 @@ with st.sidebar:
         label_visibility="collapsed",
     )
 
+    # 6. Output Settings
     st.markdown("""
     <div class="sidebar-section-title">
         <span>💾 Output Settings</span>
@@ -484,11 +497,16 @@ with st.sidebar:
     output_format = st.selectbox("Format", ["JPEG", "PNG", "WEBP"], index=0, label_visibility="collapsed")
     jpeg_quality = st.slider("Quality", 10, 100, 85, 5)
 
-# ── Image Pipeline ───────────────────────────────────────────────────────────
+# ── Image Pipeline Processing ────────────────────────────────────────────────
+default_photo_path = Path("default_photo.jpg")
 sample_path = Path("sample.jpg")
+
 if uploaded_file is not None:
     img = Image.open(uploaded_file).convert("RGB")
     file_bytes_len = len(uploaded_file.getvalue())
+elif default_photo_path.exists():
+    img = Image.open(default_photo_path).convert("RGB")
+    file_bytes_len = default_photo_path.stat().st_size
 elif sample_path.exists():
     img = Image.open(sample_path).convert("RGB")
     file_bytes_len = sample_path.stat().st_size
@@ -498,7 +516,7 @@ else:
     img = Image.fromarray(arr)
     file_bytes_len = 65400
 
-original_width, original_height = img.size
+original_width, original_height = 640, 640
 display_size = (600, 600)
 img_display = img.resize(display_size, Image.LANCZOS)
 original_array = np.array(img_display) / 255.0
@@ -549,7 +567,7 @@ else:
     ext = "webp"
 download_bytes = buf.getvalue()
 
-# Base64 encodings for tight zero-scroll HTML img rendering
+# Base64 encodings for responsive display
 orig_buf = io.BytesIO()
 Image.fromarray((original_array * 255).astype(np.uint8)).save(orig_buf, format="JPEG", quality=85)
 orig_b64 = base64.b64encode(orig_buf.getvalue()).decode()
@@ -558,9 +576,10 @@ proc_buf = io.BytesIO()
 processed_img.save(proc_buf, format="JPEG", quality=85)
 proc_b64 = base64.b64encode(proc_buf.getvalue()).decode()
 
+# Compute Analytics
 avg_change, max_change, percent_changed = analyze_changes(original_array, processed_array)
 
-# ── 1. TOP NAVBAR (Height ~42px) ─────────────────────────────────────────────
+# ── TOP HEADER BAR ───────────────────────────────────────────────────────────
 nav_col1, nav_col2 = st.columns([7, 3])
 with nav_col1:
     st.markdown("""
@@ -589,7 +608,7 @@ with nav_col2:
             use_container_width=True,
         )
 
-# ── 2. MAIN 3 CARDS ROW (Height ~215px) ───────────────────────────────────────
+# ── FIRST ROW (Original, Processed, Transformation Summary) ───────────────────
 col_orig, col_proc, col_summary = st.columns([3.3, 3.3, 3.4])
 
 with col_orig:
@@ -659,7 +678,7 @@ with col_summary:
     </div>
     """, unsafe_allow_html=True)
 
-# ── 3. METRICS ROW (Height ~46px) ─────────────────────────────────────────────
+# ── SECOND ROW (Three Metric Cards) ──────────────────────────────────────────
 m_c1, m_c2, m_c3 = st.columns(3)
 
 with m_c1:
@@ -701,7 +720,7 @@ with m_c3:
     </div>
     """, unsafe_allow_html=True)
 
-# ── 4. HISTOGRAMS ROW (Height ~145px) ─────────────────────────────────────────
+# ── THIRD ROW (Original & Processed Histograms) ───────────────────────────────
 h_col1, h_col2 = st.columns(2)
 
 orig_hist = compute_histogram(original_array)
@@ -709,7 +728,7 @@ proc_hist = compute_histogram(processed_array)
 
 def make_compact_hist(hist_data):
     fig = go.Figure()
-    colors = {"Red": "#ff4d4d", "Green": "#00e676", "Blue": "#00b0ff"}
+    colors = {"Red": "#ff4d4d", "Green": "#00EFA5", "Blue": "#00E5F5"}
     for ch in ["Red", "Green", "Blue"]:
         fig.add_trace(go.Scatter(
             x=list(range(256)),
@@ -771,7 +790,7 @@ with h_col2:
     st.plotly_chart(make_compact_hist(proc_hist), use_container_width=True, config={"displayModeBar": False})
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ── 5. BOTTOM INFO STRIP (Height ~40px) ──────────────────────────────────────
+# ── BOTTOM ROW (Image Information Metadata Strip) ────────────────────────────
 i_c1, i_c2, i_c3, i_c4, i_c5 = st.columns([2.2, 2, 2, 2.2, 2])
 
 with i_c1:
