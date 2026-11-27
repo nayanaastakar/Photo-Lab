@@ -61,9 +61,115 @@ st.markdown("""
         padding: 0 !important;
     }
 
-    /* Hide Streamlit default header decoration */
-    [data-testid="stHeader"], [data-testid="stToolbar"] {
+    /* Streamlit header & toolbar styling */
+    [data-testid="stHeader"] {
+        background: transparent !important;
+        height: 0px !important;
+        min-height: 0px !important;
+        padding: 0 !important;
+        border: none !important;
+        overflow: visible !important;
+        z-index: 99999 !important;
+    }
+    [data-testid="stToolbar"] {
+        background: transparent !important;
+        height: 0px !important;
+        overflow: visible !important;
+        display: flex !important;
+    }
+    /* Hide Deploy and 3-dots Main Menu, only keep expand sidebar hamburger button */
+    [data-testid="stToolbarActions"], [data-testid="stAppDeployButton"], [data-testid="stMainMenuButton"] {
         display: none !important;
+    }
+
+    /* Style the hamburger toggle button (when sidebar is collapsed) */
+    [data-testid="stExpandSidebarButton"] {
+        position: fixed !important;
+        top: 14px !important;
+        left: 14px !important;
+        z-index: 1000000 !important;
+        background: rgba(6, 38, 56, 0.95) !important;
+        border: 1px solid var(--primary-cyan) !important;
+        border-radius: 8px !important;
+        width: 38px !important;
+        height: 38px !important;
+        box-shadow: 0 0 15px rgba(0, 229, 245, 0.5) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+    [data-testid="stExpandSidebarButton"]:hover {
+        background: rgba(0, 229, 245, 0.25) !important;
+        transform: scale(1.06) !important;
+        box-shadow: 0 0 20px rgba(0, 229, 245, 0.8) !important;
+    }
+    [data-testid="stExpandSidebarButton"] span {
+        display: none !important;
+    }
+    /* Hamburger 3-line icon */
+    [data-testid="stExpandSidebarButton"]::after {
+        content: "" !important;
+        display: block !important;
+        width: 18px !important;
+        height: 12px !important;
+        border-top: 2px solid var(--primary-cyan) !important;
+        border-bottom: 2px solid var(--primary-cyan) !important;
+        background: linear-gradient(to bottom, transparent 40%, var(--primary-cyan) 40%, var(--primary-cyan) 60%, transparent 60%) !important;
+    }
+
+    /* Style the collapse toggle button inside sidebar header */
+    [data-testid="stSidebarHeader"] {
+        padding: 0.35rem 0.55rem 0.1rem 0.55rem !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        position: relative !important;
+    }
+    [data-testid="stSidebarHeader"]::before {
+        content: "⚙️ Controls" !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-size: 1.05rem !important;
+        font-weight: 700 !important;
+        color: var(--text-white) !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.4rem !important;
+        letter-spacing: -0.01em !important;
+    }
+    [data-testid="stSidebarCollapseButton"] button {
+        background: rgba(6, 38, 56, 0.95) !important;
+        border: 1px solid var(--primary-cyan) !important;
+        border-radius: 8px !important;
+        color: var(--primary-cyan) !important;
+        width: 32px !important;
+        height: 32px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        box-shadow: 0 0 10px rgba(0, 229, 245, 0.4) !important;
+        transition: all 0.2s ease !important;
+    }
+    [data-testid="stSidebarCollapseButton"] button:hover {
+        background: rgba(0, 229, 245, 0.25) !important;
+        transform: scale(1.06) !important;
+        box-shadow: 0 0 16px rgba(0, 229, 245, 0.8) !important;
+    }
+    [data-testid="stSidebarCollapseButton"] button span {
+        display: none !important;
+    }
+    [data-testid="stSidebarCollapseButton"] button::after {
+        content: "" !important;
+        display: block !important;
+        width: 15px !important;
+        height: 10px !important;
+        border-top: 2px solid var(--primary-cyan) !important;
+        border-bottom: 2px solid var(--primary-cyan) !important;
+        background: linear-gradient(to bottom, transparent 35%, var(--primary-cyan) 35%, var(--primary-cyan) 65%, transparent 65%) !important;
     }
 
     /* ── RESPONSIVE DESKTOP (>= 1025px): STRICT ZERO SCROLL ── */
@@ -518,13 +624,6 @@ st.markdown("""
 
 # ── Sidebar Controls (19% width, exact Image 2 layout, responsive) ───────────
 with st.sidebar:
-    st.markdown("""
-    <div class="sidebar-header">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        Controls
-    </div>
-    """, unsafe_allow_html=True)
-
     # 1. Upload Card Box
     st.markdown("""
     <div class="sidebar-card-box">
