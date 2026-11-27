@@ -68,25 +68,26 @@ st.markdown("""
         display: none !important;
     }
 
-    /* Main Container fits viewport without overflow */
+    /* Main Container fits viewport with balanced tight margins */
     .main .block-container, [data-testid="stMainBlockContainer"] {
-        padding: 0.25rem 0.65rem 0.25rem 0.65rem !important;
+        padding: 0.6rem 0.9rem 0.6rem 0.9rem !important;
         max-width: 100% !important;
         height: 100vh !important;
         max-height: 100vh !important;
         overflow: hidden !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
+        gap: 0.55rem !important;
         box-sizing: border-box !important;
     }
 
     [data-testid="stMainBlockContainer"] > div {
-        height: 100% !important;
+        height: auto !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-between !important;
-        gap: 0.15rem !important;
+        justify-content: flex-start !important;
+        gap: 0.55rem !important;
     }
 
     /* ── LEFT SIDEBAR (Controls - Match Image 2 Pixel-for-Pixel & No-Scroll) ── */
@@ -102,9 +103,13 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] > div:first-child {
-        padding: 0.35rem 0.5rem !important;
+        padding: 0.45rem 0.55rem !important;
         height: 100vh !important;
         overflow-y: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        box-sizing: border-box !important;
     }
 
     /* Controls Top Header */
@@ -115,7 +120,7 @@ st.markdown("""
         font-size: 1.15rem;
         font-weight: 700;
         color: var(--text-white);
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.25rem;
         padding-left: 0.15rem;
     }
     .sidebar-header svg {
@@ -127,7 +132,7 @@ st.markdown("""
         background: rgba(6, 38, 56, 0.85);
         border: 1px solid rgba(0, 217, 232, 0.35);
         border-radius: 9px;
-        padding: 0.3rem 0.5rem;
+        padding: 0.35rem 0.5rem;
         margin-bottom: 0.25rem;
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
     }
@@ -145,11 +150,11 @@ st.markdown("""
         margin-bottom: 0 !important;
     }
     [data-testid="stFileUploader"] > section {
-        padding: 0.2rem 0.4rem !important;
+        padding: 0.25rem 0.45rem !important;
         background: rgba(4, 25, 38, 0.7) !important;
         border: 1px dashed rgba(0, 217, 232, 0.6) !important;
         border-radius: 6px !important;
-        min-height: 38px !important;
+        min-height: 40px !important;
     }
     [data-testid="stFileUploader"] section > button {
         display: none !important;
@@ -163,7 +168,7 @@ st.markdown("""
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 0.75rem;
+        font-size: 0.76rem;
         font-weight: 600;
         color: #d1e4f2;
         margin-bottom: 0.15rem;
@@ -174,7 +179,7 @@ st.markdown("""
         gap: 0.3rem;
     }
 
-    /* Exact Slider Row Layout matching Image 2: Label on left, Value right-aligned */
+    /* Slider Row: Label on left, Value right-aligned */
     .slider-row-header {
         display: flex;
         justify-content: space-between;
@@ -198,7 +203,6 @@ st.markdown("""
         display: none !important;
     }
 
-    /* Slider Container & Track matching Image 2 */
     .stSlider {
         margin-bottom: -0.25rem !important;
         padding-top: 0 !important;
@@ -210,7 +214,6 @@ st.markdown("""
         padding: 0.08rem 0 !important;
     }
 
-    /* Slider Track (Dark slate inactive, vibrant electric cyan active) */
     div[data-testid="stSlider"] div[data-baseweb="slider"] > div > div:first-child {
         background: #11364d !important;
         height: 3px !important;
@@ -221,7 +224,6 @@ st.markdown("""
         height: 3px !important;
     }
 
-    /* Slider Thumb (Glow cyan pill with round border matching Image 2) */
     div[data-testid="stSlider"] [role="slider"] {
         background-color: #00E5F5 !important;
         border: 2px solid #ffffff !important;
@@ -230,7 +232,6 @@ st.markdown("""
         height: 12px !important;
     }
 
-    /* Compact Selectboxes inside cards */
     [data-baseweb="select"] {
         background: #041a29 !important;
         border: 1px solid rgba(0, 217, 232, 0.4) !important;
@@ -243,72 +244,70 @@ st.markdown("""
     }
 
     /* ── TOP NAV BAR ── */
-    .top-navbar {
+    .top-navbar-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.15rem 0.35rem 0.35rem 0.35rem;
+        padding-bottom: 0.4rem;
         border-bottom: 1px solid rgba(0, 217, 232, 0.2);
-        height: 42px;
         box-sizing: border-box;
     }
     .brand-title {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.55rem;
     }
     .brand-title .logo-icon {
         background: var(--teal-gradient);
         border-radius: 6px;
-        padding: 0.25rem 0.38rem;
+        padding: 0.28rem 0.42rem;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #020D18;
-        box-shadow: 0 0 12px rgba(0, 229, 245, 0.4);
+        box-shadow: 0 0 14px rgba(0, 229, 245, 0.4);
     }
     .brand-title h1 {
-        font-size: 1.35rem;
+        font-size: 1.45rem;
         font-weight: 800;
         margin: 0;
         color: #ffffff;
         letter-spacing: -0.02em;
     }
     .brand-title .tagline {
-        font-size: 0.82rem;
+        font-size: 0.88rem;
         color: #728c9f;
-        margin-left: 0.65rem;
-        padding-left: 0.65rem;
+        margin-left: 0.75rem;
+        padding-left: 0.75rem;
         border-left: 1px solid rgba(0, 217, 232, 0.3);
         font-weight: 400;
     }
 
-    /* Action Buttons (Reset All & Download) */
     .stDownloadButton > button {
         background: var(--teal-gradient) !important;
         color: #020D18 !important;
         border: none !important;
-        padding: 0.28rem 0.95rem !important;
-        border-radius: 18px !important;
+        padding: 0.35rem 1.15rem !important;
+        border-radius: 20px !important;
         font-weight: 700 !important;
-        font-size: 0.75rem !important;
-        box-shadow: 0 0 14px rgba(0, 229, 245, 0.4) !important;
+        font-size: 0.82rem !important;
+        box-shadow: 0 0 16px rgba(0, 229, 245, 0.4) !important;
         transition: transform 0.15s !important;
         display: inline-flex !important;
         align-items: center !important;
-        gap: 0.35rem !important;
-        height: 32px !important;
+        gap: 0.4rem !important;
+        height: 36px !important;
     }
     .stDownloadButton > button:hover {
         transform: translateY(-1px) !important;
-        box-shadow: 0 0 20px rgba(0, 229, 245, 0.7) !important;
+        box-shadow: 0 0 22px rgba(0, 229, 245, 0.75) !important;
         color: #000000 !important;
     }
     .stButton > button {
-        height: 32px !important;
-        padding: 0.28rem 0.85rem !important;
-        font-size: 0.75rem !important;
-        border-radius: 18px !important;
+        height: 36px !important;
+        padding: 0.35rem 1rem !important;
+        font-size: 0.82rem !important;
+        border-radius: 20px !important;
         background: rgba(6, 38, 56, 0.8) !important;
         border: 1px solid rgba(0, 217, 232, 0.5) !important;
         color: #b0c9dd !important;
@@ -318,8 +317,8 @@ st.markdown("""
     .studio-card {
         background: var(--card-bg);
         border: 1px solid rgba(0, 217, 232, 0.35);
-        border-radius: 9px;
-        padding: 0.4rem 0.6rem;
+        border-radius: 10px;
+        padding: 0.55rem 0.75rem;
         display: flex;
         flex-direction: column;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
@@ -329,23 +328,23 @@ st.markdown("""
     .card-header-bar {
         display: flex;
         align-items: center;
-        gap: 0.35rem;
-        font-size: 0.78rem;
+        gap: 0.4rem;
+        font-size: 0.85rem;
         font-weight: 700;
         color: #ffffff;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.35rem;
         letter-spacing: -0.01em;
     }
     .card-header-bar svg {
         color: var(--primary-cyan);
     }
 
-    /* Image Display Containers */
+    /* Image Display Containers (Well Proportioned) */
     .img-display-box {
         width: 100%;
-        height: 180px;
+        height: 220px;
         background: #01070e;
-        border-radius: 6px;
+        border-radius: 7px;
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -354,7 +353,7 @@ st.markdown("""
     }
     .img-display-box img {
         width: 100%;
-        height: 180px;
+        height: 220px;
         object-fit: cover;
         display: block;
     }
@@ -363,22 +362,22 @@ st.markdown("""
     .summary-list {
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.35rem;
         overflow-y: auto;
-        height: 180px;
-        max-height: 180px;
+        height: 220px;
+        max-height: 220px;
     }
     .summary-item {
         display: flex;
         align-items: center;
-        gap: 0.38rem;
-        font-size: 0.7rem;
+        gap: 0.45rem;
+        font-size: 0.75rem;
         color: #c0d8ec;
         font-weight: 500;
     }
     .summary-item .check-icon {
         color: var(--green-check);
-        font-size: 0.8rem;
+        font-size: 0.88rem;
         display: flex;
         align-items: center;
     }
@@ -387,12 +386,12 @@ st.markdown("""
     .stat-badge {
         background: linear-gradient(135deg, rgba(6, 38, 56, 0.85) 0%, rgba(4, 25, 38, 0.8) 100%);
         border: 1px solid rgba(0, 217, 232, 0.4);
-        border-radius: 8px;
-        padding: 0.25rem 0.75rem;
+        border-radius: 9px;
+        padding: 0.4rem 0.95rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 44px;
+        height: 52px;
         box-sizing: border-box;
     }
     .stat-badge.highlight {
@@ -402,19 +401,19 @@ st.markdown("""
     .stat-left {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.65rem;
     }
     .stat-icon {
-        font-size: 1.15rem;
+        font-size: 1.35rem;
         color: var(--primary-cyan);
     }
     .stat-text .stat-title {
-        font-size: 0.65rem;
+        font-size: 0.72rem;
         font-weight: 500;
         color: #8bb1cf;
     }
     .stat-value {
-        font-size: 1.25rem;
+        font-size: 1.45rem;
         font-weight: 800;
         color: #ffffff;
     }
@@ -423,26 +422,26 @@ st.markdown("""
     .info-strip-item {
         background: rgba(6, 38, 56, 0.85);
         border: 1px solid rgba(0, 217, 232, 0.35);
-        border-radius: 7px;
-        padding: 0.2rem 0.5rem;
+        border-radius: 8px;
+        padding: 0.35rem 0.65rem;
         display: flex;
         align-items: center;
-        gap: 0.45rem;
-        height: 38px;
+        gap: 0.6rem;
+        height: 48px;
         box-sizing: border-box;
     }
     .info-strip-icon {
         color: var(--primary-cyan);
-        font-size: 1rem;
+        font-size: 1.15rem;
     }
     .info-strip-meta .info-strip-label {
-        font-size: 0.6rem;
+        font-size: 0.65rem;
         color: #7d9cb3;
         font-weight: 500;
-        line-height: 1;
+        line-height: 1.1;
     }
     .info-strip-meta .info-strip-val {
-        font-size: 0.8rem;
+        font-size: 0.92rem;
         font-weight: 700;
         color: #ffffff;
         line-height: 1.2;
@@ -658,7 +657,7 @@ with nav_col1:
     st.markdown("""
     <div class="brand-title">
         <div class="logo-icon">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         </div>
         <h1>PhotoLab</h1>
         <span class="tagline">Image Processing & Analysis Studio</span>
@@ -809,26 +808,26 @@ def make_compact_hist(hist_data):
             mode="lines",
             fill="tozeroy",
             name=ch,
-            line=dict(color=colors[ch], width=1.3),
+            line=dict(color=colors[ch], width=1.4),
             opacity=0.65,
         ))
     fig.update_layout(
-        margin=dict(l=20, r=8, t=5, b=15),
-        height=100,
+        margin=dict(l=25, r=10, t=5, b=15),
+        height=145,
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#7d9cb3", size=8),
+        font=dict(color="#7d9cb3", size=9),
         xaxis=dict(
             showgrid=True,
             gridcolor="#0e2336",
             range=[0, 255],
             dtick=40,
-            tickfont=dict(color="#68849b", size=8),
+            tickfont=dict(color="#68849b", size=9),
         ),
         yaxis=dict(
             showgrid=True,
             gridcolor="#0e2336",
-            tickfont=dict(color="#68849b", size=8),
+            tickfont=dict(color="#68849b", size=9),
         ),
         legend=dict(
             orientation="h",
@@ -836,16 +835,16 @@ def make_compact_hist(hist_data):
             y=1.02,
             xanchor="center",
             x=0.5,
-            font=dict(size=8, color="#9bb4c7"),
+            font=dict(size=9, color="#9bb4c7"),
         ),
     )
     return fig
 
 with h_col1:
     st.markdown("""
-    <div class="studio-card" style="padding: 0.35rem 0.5rem 0.2rem 0.5rem;">
-        <div class="card-header-bar" style="margin-bottom: 0.1rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <div class="studio-card" style="padding: 0.45rem 0.65rem 0.25rem 0.65rem;">
+        <div class="card-header-bar" style="margin-bottom: 0.15rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             Original Histogram
         </div>
     """, unsafe_allow_html=True)
@@ -854,9 +853,9 @@ with h_col1:
 
 with h_col2:
     st.markdown("""
-    <div class="studio-card" style="padding: 0.35rem 0.5rem 0.2rem 0.5rem;">
-        <div class="card-header-bar" style="margin-bottom: 0.1rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <div class="studio-card" style="padding: 0.45rem 0.65rem 0.25rem 0.65rem;">
+        <div class="card-header-bar" style="margin-bottom: 0.15rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             Processed Histogram
         </div>
     """, unsafe_allow_html=True)
