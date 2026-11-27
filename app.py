@@ -4,6 +4,7 @@ import pandas as pd
 from PIL import Image
 import plotly.graph_objects as go
 import io
+import base64
 from pathlib import Path
 
 from image_processing import (
@@ -20,7 +21,6 @@ from image_processing import (
     apply_vignette,
     compute_histogram,
     analyze_changes,
-    pil_to_bytes,
 )
 
 # ── Page config ──────────────────────────────────────────────────────────────
@@ -31,10 +31,9 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Precise Theme & Layout CSS (Matches Mockup Pixel-for-Pixel & No Scroll) ──
+# ── Pure Single-Screen Zero-Scroll CSS ───────────────────────────────────────
 st.markdown("""
 <style>
-    /* Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
     :root {
@@ -52,11 +51,11 @@ st.markdown("""
         --green-check: #00e676;
     }
 
-    /* Total viewport lock - No Scroll */
-    html, body {
-        overflow: hidden !important;
+    /* Enforce strict single-screen height without scrolling */
+    html, body, .stApp, [data-testid="stAppViewContainer"] {
         height: 100vh !important;
-        width: 100vw !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
         background-color: var(--bg-main) !important;
         font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif !important;
         color: var(--text-white) !important;
@@ -64,138 +63,135 @@ st.markdown("""
         padding: 0 !important;
     }
 
-    /* Streamlit Main Viewport */
-    .stApp {
-        background-color: var(--bg-main) !important;
-        height: 100vh !important;
-        overflow: hidden !important;
-    }
-
     [data-testid="stHeader"], [data-testid="stToolbar"] {
         display: none !important;
     }
 
-    .main .block-container {
-        padding: 0.5rem 1rem 0.5rem 1rem !important;
+    /* Container fills screen without overflow */
+    .main .block-container, [data-testid="stMainBlockContainer"] {
+        padding: 0.25rem 0.65rem 0.25rem 0.65rem !important;
         max-width: 100% !important;
         height: 100vh !important;
+        max-height: 100vh !important;
         overflow: hidden !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: flex-start !important;
+        justify-content: space-between !important;
+        box-sizing: border-box !important;
     }
 
-    /* ── SIDEBAR STYLING ── */
+    [data-testid="stMainBlockContainer"] > div {
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        gap: 0.15rem !important;
+    }
+
+    /* Sidebar - Fitted & Non-Scrollable */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #071523 0%, #06121e 100%) !important;
         border-right: 1px solid #102940 !important;
-        width: 280px !important;
-        min-width: 280px !important;
-        max-width: 280px !important;
+        width: 270px !important;
+        min-width: 270px !important;
+        max-width: 270px !important;
         box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+        height: 100vh !important;
+        overflow: hidden !important;
     }
 
     [data-testid="stSidebar"] > div:first-child {
-        padding: 0.5rem 0.65rem !important;
+        padding: 0.35rem 0.55rem !important;
         height: 100vh !important;
         overflow-y: auto !important;
     }
-    
-    /* Subtle custom scrollbar inside sidebar only */
     [data-testid="stSidebar"] > div:first-child::-webkit-scrollbar {
         width: 3px;
     }
     [data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-thumb {
         background: #14314c;
-        border-radius: 4px;
     }
 
-    /* Controls Sidebar Header */
+    /* Controls Header */
     .sidebar-header {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 1.15rem;
+        gap: 0.45rem;
+        font-size: 1.1rem;
         font-weight: 700;
         color: var(--text-white);
-        margin-bottom: 0.45rem;
-        padding-left: 0.2rem;
+        margin-bottom: 0.25rem;
+        padding-left: 0.15rem;
     }
     .sidebar-header svg {
         color: var(--cyan-accent);
     }
 
-    /* Section Accordion Headers */
-    .sidebar-section-title {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #d1e4f2;
-        margin-top: 0.35rem;
-        margin-bottom: 0.15rem;
-        padding: 0.15rem 0.2rem;
-    }
-    .sidebar-section-title span {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-    }
-
-    /* Upload Box Mockup */
     .upload-label {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         font-weight: 600;
         color: #9cb5c9;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.15rem;
         display: flex;
         align-items: center;
-        gap: 0.35rem;
+        gap: 0.3rem;
     }
     [data-testid="stFileUploader"] {
-        margin-bottom: 0.2rem !important;
+        margin-bottom: 0.15rem !important;
     }
     [data-testid="stFileUploader"] > section {
-        padding: 0.35rem 0.5rem !important;
+        padding: 0.2rem 0.4rem !important;
         background: rgba(13, 31, 50, 0.6) !important;
         border: 1px dashed #1e4569 !important;
-        border-radius: 8px !important;
-        min-height: 52px !important;
+        border-radius: 6px !important;
+        min-height: 42px !important;
     }
     [data-testid="stFileUploader"] section > button {
         display: none !important;
     }
     [data-testid="stFileUploader"] section div {
         color: var(--cyan-accent) !important;
-        font-size: 0.72rem !important;
+        font-size: 0.68rem !important;
     }
 
-    /* Compact Slider rows */
+    .sidebar-section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #d1e4f2;
+        margin-top: 0.25rem;
+        margin-bottom: 0.05rem;
+        padding: 0.1rem 0.15rem;
+    }
+    .sidebar-section-title span {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
     .stSlider {
-        margin-bottom: -0.25rem !important;
+        margin-bottom: -0.35rem !important;
         padding-top: 0 !important;
     }
     .stSlider label {
-        font-size: 0.72rem !important;
+        font-size: 0.68rem !important;
         font-weight: 500 !important;
         color: #8ea5b8 !important;
-        margin-bottom: -0.4rem !important;
+        margin-bottom: -0.5rem !important;
     }
     .stSlider div[data-baseweb="slider"] {
-        padding: 0.2rem 0 !important;
+        padding: 0.15rem 0 !important;
     }
-
-    /* Cyan Sliders Track & Handle */
     div[data-testid="stSlider"] [role="slider"] {
         background-color: var(--cyan-accent) !important;
         border: 2px solid #ffffff !important;
-        box-shadow: 0 0 10px rgba(0, 210, 211, 0.7) !important;
-        width: 14px !important;
-        height: 14px !important;
+        box-shadow: 0 0 8px rgba(0, 210, 211, 0.7) !important;
+        width: 12px !important;
+        height: 12px !important;
     }
 
-    /* Selectbox styling */
     [data-baseweb="select"] {
         background: #0d2238 !important;
         border: 1px solid #1a3d60 !important;
@@ -203,7 +199,7 @@ st.markdown("""
     }
     [data-baseweb="select"] * {
         color: #d8e9f5 !important;
-        font-size: 0.78rem !important;
+        font-size: 0.72rem !important;
     }
 
     /* ── TOP NAV BAR ── */
@@ -211,143 +207,152 @@ st.markdown("""
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.2rem 0.5rem 0.5rem 0.5rem;
-        margin-bottom: 0.35rem;
-        border-bottom: 1px solid rgba(20, 49, 76, 0.5);
+        padding: 0.15rem 0.35rem 0.35rem 0.35rem;
+        border-bottom: 1px solid rgba(20, 49, 76, 0.45);
+        height: 42px;
+        box-sizing: border-box;
     }
     .brand-title {
         display: flex;
         align-items: center;
-        gap: 0.6rem;
+        gap: 0.5rem;
     }
     .brand-title .logo-icon {
         background: var(--teal-gradient);
-        border-radius: 7px;
-        padding: 0.3rem 0.45rem;
+        border-radius: 6px;
+        padding: 0.25rem 0.38rem;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #06121e;
-        box-shadow: 0 0 14px rgba(0, 210, 211, 0.4);
+        box-shadow: 0 0 12px rgba(0, 210, 211, 0.4);
     }
     .brand-title h1 {
-        font-size: 1.45rem;
+        font-size: 1.3rem;
         font-weight: 800;
         margin: 0;
         color: #ffffff;
         letter-spacing: -0.02em;
     }
     .brand-title .tagline {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: #728c9f;
-        margin-left: 0.75rem;
-        padding-left: 0.75rem;
+        margin-left: 0.65rem;
+        padding-left: 0.65rem;
         border-left: 1px solid #1e3a54;
         font-weight: 400;
     }
 
-    /* Top Action Buttons */
-    .top-actions {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-    }
-    .btn-reset {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        padding: 0.35rem 0.9rem;
-        background: rgba(13, 31, 50, 0.7);
-        border: 1px solid #1e4569;
-        border-radius: 20px;
-        color: #b0c9dd;
-        font-size: 0.78rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .btn-reset:hover {
-        background: rgba(20, 49, 76, 0.9);
-        color: #ffffff;
-        border-color: var(--cyan-accent);
-    }
-
-    /* Streamlit Download Button Override to Match Mockup Cyan Pill */
     .stDownloadButton > button {
         background: var(--teal-gradient) !important;
         color: #061421 !important;
         border: none !important;
-        padding: 0.38rem 1.1rem !important;
-        border-radius: 20px !important;
+        padding: 0.28rem 0.95rem !important;
+        border-radius: 18px !important;
         font-weight: 700 !important;
-        font-size: 0.78rem !important;
-        box-shadow: 0 0 16px rgba(0, 210, 211, 0.35) !important;
-        transition: transform 0.15s, box-shadow 0.15s !important;
+        font-size: 0.75rem !important;
+        box-shadow: 0 0 14px rgba(0, 210, 211, 0.35) !important;
+        transition: transform 0.15s !important;
         display: inline-flex !important;
         align-items: center !important;
-        gap: 0.4rem !important;
+        gap: 0.35rem !important;
+        height: 32px !important;
     }
     .stDownloadButton > button:hover {
         transform: translateY(-1px) !important;
-        box-shadow: 0 0 22px rgba(0, 210, 211, 0.55) !important;
+        box-shadow: 0 0 18px rgba(0, 210, 211, 0.55) !important;
         color: #000000 !important;
     }
+    .stButton > button {
+        height: 32px !important;
+        padding: 0.28rem 0.85rem !important;
+        font-size: 0.75rem !important;
+        border-radius: 18px !important;
+        background: rgba(13, 31, 50, 0.8) !important;
+        border: 1px solid #1e4569 !important;
+        color: #b0c9dd !important;
+    }
 
-    /* ── CARD PANELS ── */
+    /* ── CARDS ── */
     .studio-card {
         background: var(--card-bg);
         border: 1px solid var(--card-border);
-        border-radius: 10px;
-        padding: 0.55rem 0.75rem;
-        height: 100%;
+        border-radius: 9px;
+        padding: 0.4rem 0.6rem;
         display: flex;
         flex-direction: column;
-        backdrop-filter: blur(8px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+        box-sizing: border-box;
     }
 
     .card-header-bar {
         display: flex;
         align-items: center;
-        gap: 0.4rem;
-        font-size: 0.85rem;
+        gap: 0.35rem;
+        font-size: 0.78rem;
         font-weight: 700;
         color: #ffffff;
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.25rem;
         letter-spacing: -0.01em;
     }
     .card-header-bar svg {
         color: var(--cyan-accent);
     }
 
-    /* Image Display Containers */
-    .image-preview-frame {
+    /* Image Containers Fixed to prevent overflow */
+    .img-display-box {
         width: 100%;
-        height: 155px;
+        height: 180px;
         background: #02070d;
-        border-radius: 7px;
+        border-radius: 6px;
         overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
         border: 1px solid #10263c;
     }
-    .image-preview-frame img {
-        max-width: 100%;
-        max-height: 155px;
+    .img-display-box img {
+        width: 100%;
+        height: 180px;
         object-fit: cover;
+        display: block;
     }
 
-    /* Metric Stat Badges */
+    /* Summary list fitted */
+    .summary-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        overflow-y: auto;
+        height: 180px;
+        max-height: 180px;
+    }
+    .summary-item {
+        display: flex;
+        align-items: center;
+        gap: 0.38rem;
+        font-size: 0.7rem;
+        color: #c0d8ec;
+        font-weight: 500;
+    }
+    .summary-item .check-icon {
+        color: var(--green-check);
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Metric Badges */
     .stat-badge {
         background: linear-gradient(135deg, rgba(8, 28, 48, 0.8) 0%, rgba(5, 45, 65, 0.7) 100%);
         border: 1px solid #144066;
-        border-radius: 9px;
-        padding: 0.4rem 0.85rem;
+        border-radius: 8px;
+        padding: 0.25rem 0.75rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 52px;
+        height: 44px;
+        box-sizing: border-box;
     }
     .stat-badge.highlight {
         background: linear-gradient(135deg, rgba(0, 95, 96, 0.4) 0%, rgba(0, 168, 150, 0.35) 100%);
@@ -356,93 +361,63 @@ st.markdown("""
     .stat-left {
         display: flex;
         align-items: center;
-        gap: 0.65rem;
+        gap: 0.5rem;
     }
     .stat-icon {
-        font-size: 1.3rem;
+        font-size: 1.15rem;
         color: var(--cyan-accent);
     }
     .stat-text .stat-title {
-        font-size: 0.68rem;
+        font-size: 0.65rem;
         font-weight: 500;
         color: #8bb1cf;
-        text-transform: capitalize;
     }
     .stat-value {
-        font-size: 1.35rem;
+        font-size: 1.2rem;
         font-weight: 800;
         color: #ffffff;
-        letter-spacing: -0.02em;
-    }
-
-    /* Summary Checklist */
-    .summary-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.32rem;
-        overflow-y: auto;
-        max-height: 155px;
-    }
-    .summary-item {
-        display: flex;
-        align-items: center;
-        gap: 0.45rem;
-        font-size: 0.72rem;
-        color: #c0d8ec;
-        font-weight: 500;
-    }
-    .summary-item .check-icon {
-        color: var(--green-check);
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
     }
 
     /* Bottom Info Strip */
     .info-strip-item {
         background: rgba(10, 26, 42, 0.75);
         border: 1px solid #143555;
-        border-radius: 8px;
-        padding: 0.35rem 0.65rem;
+        border-radius: 7px;
+        padding: 0.2rem 0.5rem;
         display: flex;
         align-items: center;
-        gap: 0.6rem;
-        height: 48px;
+        gap: 0.45rem;
+        height: 38px;
+        box-sizing: border-box;
     }
     .info-strip-icon {
         color: var(--cyan-accent);
-        font-size: 1.15rem;
+        font-size: 1rem;
     }
     .info-strip-meta .info-strip-label {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
         color: #7d9cb3;
         font-weight: 500;
+        line-height: 1;
     }
     .info-strip-meta .info-strip-val {
-        font-size: 0.88rem;
+        font-size: 0.8rem;
         font-weight: 700;
         color: #ffffff;
-    }
-
-    /* Spacing between rows */
-    .row-spacer {
-        margin-top: 0.35rem;
+        line-height: 1.2;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# ── Load Default Sample or Uploaded Image ────────────────────────────────────
-uploaded_file = None
-
-# Sidebar Content
+# ── Sidebar Controls ─────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("""
     <div class="sidebar-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Controls
     </div>
     <div class="upload-label">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         Upload Image
     </div>
     """, unsafe_allow_html=True)
@@ -453,11 +428,10 @@ with st.sidebar:
         label_visibility="collapsed",
     )
 
-    # Basic Adjustments
     st.markdown("""
     <div class="sidebar-section-title">
         <span>🔆 Basic Adjustments</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
     </div>
     """, unsafe_allow_html=True)
     brightness = st.slider("Brightness", 0.0, 3.0, 0.25, 0.05)
@@ -465,21 +439,19 @@ with st.sidebar:
     sharpness = st.slider("Sharpness", 0.0, 3.0, 0.90, 0.05)
     saturation = st.slider("Saturation", 0.0, 3.0, 0.20, 0.05)
 
-    # Effects
     st.markdown("""
     <div class="sidebar-section-title">
         <span>✨ Effects</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
     </div>
     """, unsafe_allow_html=True)
     blur_radius = st.slider("Blur Radius", 0.0, 10.0, 0.00, 0.5)
     vignette_strength = st.slider("Vignette", 0.0, 1.0, 0.00, 0.05)
 
-    # Filters
     st.markdown("""
     <div class="sidebar-section-title">
         <span>🎨 Filters</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     """, unsafe_allow_html=True)
     filter_mode = st.selectbox(
@@ -489,11 +461,10 @@ with st.sidebar:
         label_visibility="collapsed",
     )
 
-    # Transform
     st.markdown("""
     <div class="sidebar-section-title">
         <span>🔄 Transform</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     """, unsafe_allow_html=True)
     rotation = st.slider("Rotation (°)", -180, 180, 180, 1)
@@ -504,17 +475,16 @@ with st.sidebar:
         label_visibility="collapsed",
     )
 
-    # Output Settings
     st.markdown("""
     <div class="sidebar-section-title">
         <span>💾 Output Settings</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
     </div>
     """, unsafe_allow_html=True)
     output_format = st.selectbox("Format", ["JPEG", "PNG", "WEBP"], index=0, label_visibility="collapsed")
     jpeg_quality = st.slider("Quality", 10, 100, 85, 5)
 
-# ── Load Image ──────────────────────────────────────────────────────────────
+# ── Image Pipeline ───────────────────────────────────────────────────────────
 sample_path = Path("sample.jpg")
 if uploaded_file is not None:
     img = Image.open(uploaded_file).convert("RGB")
@@ -523,7 +493,6 @@ elif sample_path.exists():
     img = Image.open(sample_path).convert("RGB")
     file_bytes_len = sample_path.stat().st_size
 else:
-    # Deterministic dummy image
     arr = np.zeros((640, 640, 3), dtype=np.uint8)
     arr[120:520, 120:520] = [180, 110, 50]
     img = Image.fromarray(arr)
@@ -534,7 +503,6 @@ display_size = (600, 600)
 img_display = img.resize(display_size, Image.LANCZOS)
 original_array = np.array(img_display) / 255.0
 
-# ── Processing Pipeline ──────────────────────────────────────────────────────
 processed_array = original_array.copy()
 processed_array = apply_brightness(processed_array, brightness)
 processed_array = apply_contrast(processed_array, contrast)
@@ -581,16 +549,24 @@ else:
     ext = "webp"
 download_bytes = buf.getvalue()
 
-# Compute Metrics
+# Base64 encodings for tight zero-scroll HTML img rendering
+orig_buf = io.BytesIO()
+Image.fromarray((original_array * 255).astype(np.uint8)).save(orig_buf, format="JPEG", quality=85)
+orig_b64 = base64.b64encode(orig_buf.getvalue()).decode()
+
+proc_buf = io.BytesIO()
+processed_img.save(proc_buf, format="JPEG", quality=85)
+proc_b64 = base64.b64encode(proc_buf.getvalue()).decode()
+
 avg_change, max_change, percent_changed = analyze_changes(original_array, processed_array)
 
-# ── TOP NAVBAR ───────────────────────────────────────────────────────────────
+# ── 1. TOP NAVBAR (Height ~42px) ─────────────────────────────────────────────
 nav_col1, nav_col2 = st.columns([7, 3])
 with nav_col1:
     st.markdown("""
     <div class="brand-title">
         <div class="logo-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         </div>
         <h1>PhotoLab</h1>
         <span class="tagline">Image Processing & Analysis Studio</span>
@@ -613,33 +589,36 @@ with nav_col2:
             use_container_width=True,
         )
 
-# ── MAIN CONTENT (3 COLUMNS) ─────────────────────────────────────────────────
+# ── 2. MAIN 3 CARDS ROW (Height ~215px) ───────────────────────────────────────
 col_orig, col_proc, col_summary = st.columns([3.3, 3.3, 3.4])
 
 with col_orig:
-    st.markdown("""
+    st.markdown(f"""
     <div class="studio-card">
         <div class="card-header-bar">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             Original Image
         </div>
+        <div class="img-display-box">
+            <img src="data:image/jpeg;base64,{orig_b64}" alt="Original Image" />
+        </div>
+    </div>
     """, unsafe_allow_html=True)
-    st.image(original_array, use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 
 with col_proc:
-    st.markdown("""
+    st.markdown(f"""
     <div class="studio-card">
         <div class="card-header-bar">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>
             Processed Image
         </div>
+        <div class="img-display-box">
+            <img src="data:image/jpeg;base64,{proc_b64}" alt="Processed Image" />
+        </div>
+    </div>
     """, unsafe_allow_html=True)
-    st.image(processed_array, use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 
 with col_summary:
-    # Transformation Summary Checklist
     applied_list = []
     if brightness != 1.0:
         applied_list.append(f"Brightness adjusted by factor {brightness:.2f}")
@@ -671,7 +650,7 @@ with col_summary:
     st.markdown(f"""
     <div class="studio-card">
         <div class="card-header-bar">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
             Transformation Summary
         </div>
         <div class="summary-list">
@@ -680,8 +659,7 @@ with col_summary:
     </div>
     """, unsafe_allow_html=True)
 
-# ── METRICS STRIP (3 STATS) ──────────────────────────────────────────────────
-st.markdown('<div class="row-spacer"></div>', unsafe_allow_html=True)
+# ── 3. METRICS ROW (Height ~46px) ─────────────────────────────────────────────
 m_c1, m_c2, m_c3 = st.columns(3)
 
 with m_c1:
@@ -723,14 +701,13 @@ with m_c3:
     </div>
     """, unsafe_allow_html=True)
 
-# ── HISTOGRAMS ROW ───────────────────────────────────────────────────────────
-st.markdown('<div class="row-spacer"></div>', unsafe_allow_html=True)
+# ── 4. HISTOGRAMS ROW (Height ~145px) ─────────────────────────────────────────
 h_col1, h_col2 = st.columns(2)
 
 orig_hist = compute_histogram(original_array)
 proc_hist = compute_histogram(processed_array)
 
-def make_hist_figure(hist_data, title_text):
+def make_compact_hist(hist_data):
     fig = go.Figure()
     colors = {"Red": "#ff4d4d", "Green": "#00e676", "Blue": "#00b0ff"}
     for ch in ["Red", "Green", "Blue"]:
@@ -740,21 +717,19 @@ def make_hist_figure(hist_data, title_text):
             mode="lines",
             fill="tozeroy",
             name=ch,
-            line=dict(color=colors[ch], width=1.5),
-            opacity=0.6,
+            line=dict(color=colors[ch], width=1.3),
+            opacity=0.65,
         ))
     fig.update_layout(
-        margin=dict(l=25, r=10, t=10, b=20),
-        height=110,
+        margin=dict(l=20, r=8, t=5, b=15),
+        height=100,
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#7d9cb3", size=9),
+        font=dict(color="#7d9cb3", size=8),
         xaxis=dict(
             showgrid=True,
             gridcolor="#0e2336",
             range=[0, 255],
-            tickmode="linear",
-            tick0=0,
             dtick=40,
             tickfont=dict(color="#68849b", size=8),
         ),
@@ -769,35 +744,34 @@ def make_hist_figure(hist_data, title_text):
             y=1.02,
             xanchor="center",
             x=0.5,
-            font=dict(size=9, color="#9bb4c7"),
+            font=dict(size=8, color="#9bb4c7"),
         ),
     )
     return fig
 
 with h_col1:
     st.markdown("""
-    <div class="studio-card" style="padding-bottom: 0.2rem;">
+    <div class="studio-card" style="padding: 0.35rem 0.5rem 0.2rem 0.5rem;">
         <div class="card-header-bar" style="margin-bottom: 0.1rem;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             Original Histogram
         </div>
     """, unsafe_allow_html=True)
-    st.plotly_chart(make_hist_figure(orig_hist, "Original"), use_container_width=True, config={"displayModeBar": False})
+    st.plotly_chart(make_compact_hist(orig_hist), use_container_width=True, config={"displayModeBar": False})
     st.markdown("</div>", unsafe_allow_html=True)
 
 with h_col2:
     st.markdown("""
-    <div class="studio-card" style="padding-bottom: 0.2rem;">
+    <div class="studio-card" style="padding: 0.35rem 0.5rem 0.2rem 0.5rem;">
         <div class="card-header-bar" style="margin-bottom: 0.1rem;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             Processed Histogram
         </div>
     """, unsafe_allow_html=True)
-    st.plotly_chart(make_hist_figure(proc_hist, "Processed"), use_container_width=True, config={"displayModeBar": False})
+    st.plotly_chart(make_compact_hist(proc_hist), use_container_width=True, config={"displayModeBar": False})
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ── BOTTOM INFO STRIP ────────────────────────────────────────────────────────
-st.markdown('<div class="row-spacer"></div>', unsafe_allow_html=True)
+# ── 5. BOTTOM INFO STRIP (Height ~40px) ──────────────────────────────────────
 i_c1, i_c2, i_c3, i_c4, i_c5 = st.columns([2.2, 2, 2, 2.2, 2])
 
 with i_c1:
