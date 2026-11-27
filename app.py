@@ -38,7 +38,7 @@ st.markdown("""
 
     :root {
         --bg-main: #020D18;
-        --sidebar-bg: #062033;
+        --sidebar-bg: #041829;
         --card-bg: #062638;
         --card-border: #00D9E8;
         --card-border-glow: rgba(0, 217, 232, 0.35);
@@ -89,9 +89,9 @@ st.markdown("""
         gap: 0.15rem !important;
     }
 
-    /* ── LEFT SIDEBAR (Controls - 19% Width) ── */
+    /* ── LEFT SIDEBAR (Controls - Match Image 2 Pixel-for-Pixel & No-Scroll) ── */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #062033 0%, #041624 100%) !important;
+        background: #031422 !important;
         border-right: 1px solid rgba(0, 217, 232, 0.25) !important;
         width: 19vw !important;
         min-width: 260px !important;
@@ -102,19 +102,12 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] > div:first-child {
-        padding: 0.35rem 0.55rem !important;
+        padding: 0.35rem 0.5rem !important;
         height: 100vh !important;
-        overflow-y: auto !important;
-    }
-    [data-testid="stSidebar"] > div:first-child::-webkit-scrollbar {
-        width: 3px;
-    }
-    [data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-thumb {
-        background: #00D9E8;
-        border-radius: 4px;
+        overflow-y: hidden !important;
     }
 
-    /* Controls Header */
+    /* Controls Top Header */
     .sidebar-header {
         display: flex;
         align-items: center;
@@ -122,14 +115,23 @@ st.markdown("""
         font-size: 1.15rem;
         font-weight: 700;
         color: var(--text-white);
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.2rem;
         padding-left: 0.15rem;
     }
     .sidebar-header svg {
         color: var(--primary-cyan);
     }
 
-    /* Upload Box */
+    /* Sidebar Group Card Containers (Matching Image 2 rounded glowing cards) */
+    .sidebar-card-box {
+        background: rgba(6, 38, 56, 0.85);
+        border: 1px solid rgba(0, 217, 232, 0.35);
+        border-radius: 9px;
+        padding: 0.3rem 0.5rem;
+        margin-bottom: 0.25rem;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
     .upload-label {
         font-size: 0.72rem;
         font-weight: 600;
@@ -140,14 +142,14 @@ st.markdown("""
         gap: 0.3rem;
     }
     [data-testid="stFileUploader"] {
-        margin-bottom: 0.15rem !important;
+        margin-bottom: 0 !important;
     }
     [data-testid="stFileUploader"] > section {
-        padding: 0.25rem 0.45rem !important;
-        background: rgba(6, 38, 56, 0.7) !important;
+        padding: 0.2rem 0.4rem !important;
+        background: rgba(4, 25, 38, 0.7) !important;
         border: 1px dashed rgba(0, 217, 232, 0.6) !important;
         border-radius: 6px !important;
-        min-height: 44px !important;
+        min-height: 38px !important;
     }
     [data-testid="stFileUploader"] section > button {
         display: none !important;
@@ -157,51 +159,83 @@ st.markdown("""
         font-size: 0.68rem !important;
     }
 
-    /* Collapsible Section Headers */
     .sidebar-section-title {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         font-weight: 600;
         color: #d1e4f2;
-        margin-top: 0.22rem;
-        margin-bottom: 0.05rem;
-        padding: 0.1rem 0.15rem;
+        margin-bottom: 0.15rem;
     }
     .sidebar-section-title span {
         display: flex;
         align-items: center;
-        gap: 0.35rem;
+        gap: 0.3rem;
     }
 
-    /* Compact Sliders */
+    /* Exact Slider Row Layout matching Image 2: Label on left, Value right-aligned */
+    .slider-row-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.68rem;
+        font-weight: 500;
+        color: #8ea5b8;
+        margin-bottom: -0.1rem;
+        margin-top: 0.05rem;
+    }
+    .slider-row-header .val {
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    /* Completely hide Streamlit default min/max tick bar and floating red bubble */
+    [data-testid="stSliderTickBar"] {
+        display: none !important;
+    }
+    [data-testid="stSliderThumbValue"] {
+        display: none !important;
+    }
+
+    /* Slider Container & Track matching Image 2 */
     .stSlider {
-        margin-bottom: -0.35rem !important;
+        margin-bottom: -0.25rem !important;
         padding-top: 0 !important;
     }
-    .stSlider label {
-        font-size: 0.68rem !important;
-        font-weight: 500 !important;
-        color: #8ea5b8 !important;
-        margin-bottom: -0.5rem !important;
+    .stSlider label[data-testid="stWidgetLabel"] {
+        display: none !important;
     }
     .stSlider div[data-baseweb="slider"] {
-        padding: 0.15rem 0 !important;
+        padding: 0.08rem 0 !important;
     }
+
+    /* Slider Track (Dark slate inactive, vibrant electric cyan active) */
+    div[data-testid="stSlider"] div[data-baseweb="slider"] > div > div:first-child {
+        background: #11364d !important;
+        height: 3px !important;
+    }
+    div[data-testid="stSlider"] div[data-baseweb="slider"] div[style*="background-color: var(--primary-cyan)"],
+    div[data-testid="stSlider"] div[data-baseweb="slider"] div[style*="rgb("] {
+        background: var(--primary-cyan) !important;
+        height: 3px !important;
+    }
+
+    /* Slider Thumb (Glow cyan pill with round border matching Image 2) */
     div[data-testid="stSlider"] [role="slider"] {
-        background-color: var(--primary-cyan) !important;
+        background-color: #00E5F5 !important;
         border: 2px solid #ffffff !important;
-        box-shadow: 0 0 8px rgba(0, 229, 245, 0.8) !important;
+        box-shadow: 0 0 10px rgba(0, 229, 245, 0.9) !important;
         width: 12px !important;
         height: 12px !important;
     }
 
-    /* Selectboxes */
+    /* Compact Selectboxes inside cards */
     [data-baseweb="select"] {
-        background: #062638 !important;
+        background: #041a29 !important;
         border: 1px solid rgba(0, 217, 232, 0.4) !important;
         border-radius: 6px !important;
+        min-height: 28px !important;
     }
     [data-baseweb="select"] * {
         color: #d8e9f5 !important;
@@ -416,54 +450,81 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ── Sidebar Controls (19% width, exact order) ────────────────────────────────
+# ── Sidebar Controls (19% width, exact Image 2 layout, no-scroll) ───────────
 with st.sidebar:
     st.markdown("""
     <div class="sidebar-header">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Controls
     </div>
-    <div class="upload-label">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        Upload Image
-    </div>
     """, unsafe_allow_html=True)
 
-    # 1. Upload Image
+    # 1. Upload Card Box
+    st.markdown("""
+    <div class="sidebar-card-box">
+        <div class="upload-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Upload Image
+        </div>
+    """, unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
         "Upload Image",
         type=["png", "jpg", "jpeg", "webp", "bmp"],
         label_visibility="collapsed",
     )
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    # 2. Basic Adjustments
+    # 2. Basic Adjustments Card Box
     st.markdown("""
-    <div class="sidebar-section-title">
-        <span>🔆 Basic Adjustments</span>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
-    </div>
+    <div class="sidebar-card-box">
+        <div class="sidebar-section-title">
+            <span>🔆 Basic Adjustments</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        </div>
     """, unsafe_allow_html=True)
-    brightness = st.slider("Brightness", 0.0, 3.0, 0.25, 0.05)
-    contrast = st.slider("Contrast", 0.0, 3.0, 0.70, 0.05)
-    sharpness = st.slider("Sharpness", 0.0, 3.0, 0.90, 0.05)
-    saturation = st.slider("Saturation", 0.0, 3.0, 0.20, 0.05)
+    
+    b_val = st.session_state.get("brightness", 0.25)
+    st.markdown(f'<div class="slider-row-header"><span>Brightness</span><span class="val">{b_val:.2f}</span></div>', unsafe_allow_html=True)
+    brightness = st.slider("Brightness", 0.0, 3.0, 0.25, 0.05, key="brightness", label_visibility="collapsed")
 
-    # 3. Effects
+    c_val = st.session_state.get("contrast", 0.70)
+    st.markdown(f'<div class="slider-row-header"><span>Contrast</span><span class="val">{c_val:.2f}</span></div>', unsafe_allow_html=True)
+    contrast = st.slider("Contrast", 0.0, 3.0, 0.70, 0.05, key="contrast", label_visibility="collapsed")
+
+    s_val = st.session_state.get("sharpness", 0.90)
+    st.markdown(f'<div class="slider-row-header"><span>Sharpness</span><span class="val">{s_val:.2f}</span></div>', unsafe_allow_html=True)
+    sharpness = st.slider("Sharpness", 0.0, 3.0, 0.90, 0.05, key="sharpness", label_visibility="collapsed")
+
+    sat_val = st.session_state.get("saturation", 0.20)
+    st.markdown(f'<div class="slider-row-header"><span>Saturation</span><span class="val">{sat_val:.2f}</span></div>', unsafe_allow_html=True)
+    saturation = st.slider("Saturation", 0.0, 3.0, 0.20, 0.05, key="saturation", label_visibility="collapsed")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # 3. Effects Card Box
     st.markdown("""
-    <div class="sidebar-section-title">
-        <span>✨ Effects</span>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
-    </div>
+    <div class="sidebar-card-box">
+        <div class="sidebar-section-title">
+            <span>✨ Effects</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        </div>
     """, unsafe_allow_html=True)
-    blur_radius = st.slider("Blur Radius", 0.0, 10.0, 0.00, 0.5)
-    vignette_strength = st.slider("Vignette", 0.0, 1.0, 0.00, 0.05)
+    blur_val = st.session_state.get("blur_radius", 0.0)
+    st.markdown(f'<div class="slider-row-header"><span>Blur Radius</span><span class="val">{blur_val:.2f}</span></div>', unsafe_allow_html=True)
+    blur_radius = st.slider("Blur Radius", 0.0, 10.0, 0.00, 0.5, key="blur_radius", label_visibility="collapsed")
 
-    # 4. Filters
+    vig_val = st.session_state.get("vignette", 0.0)
+    st.markdown(f'<div class="slider-row-header"><span>Vignette</span><span class="val">{vig_val:.2f}</span></div>', unsafe_allow_html=True)
+    vignette_strength = st.slider("Vignette", 0.0, 1.0, 0.00, 0.05, key="vignette", label_visibility="collapsed")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # 4. Filters Card Box
     st.markdown("""
-    <div class="sidebar-section-title">
-        <span>🎨 Filters</span>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
+    <div class="sidebar-card-box">
+        <div class="sidebar-section-title">
+            <span>🎨 Filters</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="slider-row-header" style="margin-bottom: 0.15rem;"><span>Color Filter</span></div>
     """, unsafe_allow_html=True)
     filter_mode = st.selectbox(
         "Color Filter",
@@ -471,31 +532,43 @@ with st.sidebar:
         index=0,
         label_visibility="collapsed",
     )
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    # 5. Transform
+    # 5. Transform Card Box
     st.markdown("""
-    <div class="sidebar-section-title">
-        <span>🔄 Transform</span>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
+    <div class="sidebar-card-box">
+        <div class="sidebar-section-title">
+            <span>🔄 Transform</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
     """, unsafe_allow_html=True)
-    rotation = st.slider("Rotation (°)", -180, 180, 180, 1)
+    rot_val = st.session_state.get("rotation", 180)
+    st.markdown(f'<div class="slider-row-header"><span>Rotation (°)</span><span class="val">{rot_val}</span></div>', unsafe_allow_html=True)
+    rotation = st.slider("Rotation (°)", -180, 180, 180, 1, key="rotation", label_visibility="collapsed")
+
+    st.markdown('<div class="slider-row-header" style="margin-bottom: 0.15rem; margin-top: 0.2rem;"><span>Flip</span></div>', unsafe_allow_html=True)
     flip_option = st.selectbox(
         "Flip",
         ["Vertical", "None", "Horizontal", "Both"],
         index=0,
         label_visibility="collapsed",
     )
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    # 6. Output Settings
+    # 6. Output Settings Card Box
     st.markdown("""
-    <div class="sidebar-section-title">
-        <span>💾 Output Settings</span>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
-    </div>
+    <div class="sidebar-card-box">
+        <div class="sidebar-section-title">
+            <span>💾 Output Settings</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        </div>
+        <div class="slider-row-header" style="margin-bottom: 0.15rem;"><span>Format</span></div>
     """, unsafe_allow_html=True)
     output_format = st.selectbox("Format", ["JPEG", "PNG", "WEBP"], index=0, label_visibility="collapsed")
-    jpeg_quality = st.slider("Quality", 10, 100, 85, 5)
+    q_val = st.session_state.get("quality", 85)
+    st.markdown(f'<div class="slider-row-header"><span>Quality</span><span class="val">{q_val}</span></div>', unsafe_allow_html=True)
+    jpeg_quality = st.slider("Quality", 10, 100, 85, 5, key="quality", label_visibility="collapsed")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ── Image Pipeline Processing ────────────────────────────────────────────────
 default_photo_path = Path("default_photo.jpg")
