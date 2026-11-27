@@ -195,7 +195,7 @@ st.markdown("""
             display: flex !important;
             flex-direction: column !important;
             justify-content: flex-start !important;
-            gap: 0.55rem !important;
+            gap: 0.85rem !important;
             box-sizing: border-box !important;
         }
 
@@ -204,7 +204,7 @@ st.markdown("""
             display: flex !important;
             flex-direction: column !important;
             justify-content: flex-start !important;
-            gap: 0.55rem !important;
+            gap: 0.85rem !important;
         }
 
         [data-testid="stSidebar"] {
@@ -229,10 +229,10 @@ st.markdown("""
         }
 
         .img-display-box {
-            height: 225px !important;
+            height: 195px !important;
         }
         .img-display-box img {
-            height: 225px !important;
+            height: 195px !important;
         }
     }
 
@@ -530,7 +530,14 @@ st.markdown("""
         text-overflow: ellipsis !important;
     }
 
-    /* ── DASHBOARD CARDS ── */
+    /* ── DASHBOARD CARDS & CONTAINERS ── */
+    [data-testid="stMarkdownContainer"] {
+        margin-bottom: 0 !important;
+    }
+    .stMarkdown, [data-testid="stMarkdown"], [data-testid="stElementContainer"] {
+        height: auto !important;
+    }
+
     .studio-card {
         background: var(--card-bg);
         border: 1px solid rgba(0, 217, 232, 0.35);
