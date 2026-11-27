@@ -85,15 +85,15 @@ st.markdown("""
     /* Style the hamburger toggle button (when sidebar is collapsed) */
     [data-testid="stExpandSidebarButton"] {
         position: fixed !important;
-        top: 14px !important;
-        left: 14px !important;
+        top: 10px !important;
+        left: 10px !important;
         z-index: 1000000 !important;
         background: rgba(6, 38, 56, 0.95) !important;
         border: 1px solid var(--primary-cyan) !important;
-        border-radius: 8px !important;
-        width: 38px !important;
-        height: 38px !important;
-        box-shadow: 0 0 15px rgba(0, 229, 245, 0.5) !important;
+        border-radius: 7px !important;
+        width: 32px !important;
+        height: 32px !important;
+        box-shadow: 0 0 14px rgba(0, 229, 245, 0.5) !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -102,8 +102,8 @@ st.markdown("""
     }
     [data-testid="stExpandSidebarButton"]:hover {
         background: rgba(0, 229, 245, 0.25) !important;
-        transform: scale(1.06) !important;
-        box-shadow: 0 0 20px rgba(0, 229, 245, 0.8) !important;
+        transform: scale(1.05) !important;
+        box-shadow: 0 0 18px rgba(0, 229, 245, 0.8) !important;
     }
     [data-testid="stExpandSidebarButton"] span {
         display: none !important;
@@ -112,11 +112,17 @@ st.markdown("""
     [data-testid="stExpandSidebarButton"]::after {
         content: "" !important;
         display: block !important;
-        width: 18px !important;
-        height: 12px !important;
+        width: 15px !important;
+        height: 10px !important;
         border-top: 2px solid var(--primary-cyan) !important;
         border-bottom: 2px solid var(--primary-cyan) !important;
-        background: linear-gradient(to bottom, transparent 40%, var(--primary-cyan) 40%, var(--primary-cyan) 60%, transparent 60%) !important;
+        background: linear-gradient(to bottom, transparent 35%, var(--primary-cyan) 35%, var(--primary-cyan) 65%, transparent 65%) !important;
+    }
+
+    /* When sidebar is collapsed, push the main container slightly right and give room for hamburger */
+    [data-testid="stAppViewContainer"]:has([data-testid="stExpandSidebarButton"]) .main .block-container,
+    [data-testid="stAppViewContainer"]:has([data-testid="stExpandSidebarButton"]) [data-testid="stMainBlockContainer"] {
+        padding-left: 3.2rem !important;
     }
 
     /* Style the collapse toggle button inside sidebar header */
@@ -456,6 +462,7 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 0.55rem;
+        flex-wrap: nowrap;
     }
     .brand-title .logo-icon {
         background: var(--teal-gradient);
@@ -466,37 +473,44 @@ st.markdown("""
         justify-content: center;
         color: #020D18;
         box-shadow: 0 0 14px rgba(0, 229, 245, 0.4);
+        flex-shrink: 0;
     }
     .brand-title h1 {
-        font-size: 1.45rem;
+        font-size: 1.35rem;
         font-weight: 800;
         margin: 0;
         color: #ffffff;
         letter-spacing: -0.02em;
+        white-space: nowrap;
     }
     .brand-title .tagline {
-        font-size: 0.88rem;
+        font-size: 0.82rem;
         color: #728c9f;
-        margin-left: 0.75rem;
-        padding-left: 0.75rem;
+        margin-left: 0.65rem;
+        padding-left: 0.65rem;
         border-left: 1px solid rgba(0, 217, 232, 0.3);
         font-weight: 400;
+        white-space: nowrap;
     }
 
     .stDownloadButton > button {
         background: var(--teal-gradient) !important;
         color: #020D18 !important;
         border: none !important;
-        padding: 0.35rem 1.15rem !important;
+        padding: 0.25rem 0.85rem !important;
         border-radius: 20px !important;
         font-weight: 700 !important;
-        font-size: 0.82rem !important;
+        font-size: 0.76rem !important;
         box-shadow: 0 0 16px rgba(0, 229, 245, 0.4) !important;
         transition: transform 0.15s !important;
         display: inline-flex !important;
         align-items: center !important;
-        gap: 0.4rem !important;
-        height: 36px !important;
+        justify-content: center !important;
+        gap: 0.35rem !important;
+        height: 32px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
     .stDownloadButton > button:hover {
         transform: translateY(-1px) !important;
@@ -504,13 +518,16 @@ st.markdown("""
         color: #000000 !important;
     }
     .stButton > button {
-        height: 36px !important;
-        padding: 0.35rem 1rem !important;
-        font-size: 0.82rem !important;
+        height: 32px !important;
+        padding: 0.25rem 0.75rem !important;
+        font-size: 0.76rem !important;
         border-radius: 20px !important;
         background: rgba(6, 38, 56, 0.8) !important;
         border: 1px solid rgba(0, 217, 232, 0.5) !important;
         color: #b0c9dd !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
 
     /* ── DASHBOARD CARDS ── */
@@ -818,7 +835,7 @@ proc_b64 = base64.b64encode(proc_buf.getvalue()).decode()
 avg_change, max_change, percent_changed = analyze_changes(original_array, processed_array)
 
 # ── TOP HEADER BAR ───────────────────────────────────────────────────────────
-nav_col1, nav_col2 = st.columns([7, 3])
+nav_col1, nav_col2 = st.columns([6.2, 3.8])
 with nav_col1:
     st.markdown("""
     <div class="brand-title">
@@ -839,7 +856,7 @@ with nav_col2:
             st.rerun()
     with btn_c2:
         st.download_button(
-            label=f"📥 Download as {fmt}",
+            label=f"📥 Download ({fmt})",
             data=download_bytes,
             file_name=f"photolab_edited.{ext}",
             mime=mime_type,
